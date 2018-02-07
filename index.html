@@ -142,8 +142,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8gfYbAdrmv31wjFhNZVtmIY6
     document.getElementById("onlineStatus").innerHTML = "<span class='text-success'>Online</span>";        
     socket.emit('POS', '', (data) => {
      updateAllData(data);
-   });
-    
+   });    
   });
 
   socket.on('POS', function(data){
