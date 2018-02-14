@@ -2,11 +2,11 @@
 <html>
 <head>  
   <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 
   <style>
@@ -25,13 +25,13 @@
   }
 
   .col-centered {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 
-  .row > div {
+.row > div {
     /*margin-top:10px;*/
     padding: 10px;
     outline: 0.1px solid #000000;    
@@ -39,10 +39,10 @@
     outline-offset: 0px;
     -moz-outline-radius: 10px;
     -webkit-outline-radius: 10px;
-  } 
+ } 
 
-  .row-light {
-    /*margin-top:10px;*/
+ .row-light {
+  /*margin-top:10px;*/
     padding: 10px;
     outline: 0.1px solid #FFF;
     background: #414142;
@@ -50,35 +50,57 @@
     outline-offset: 0px;
     -moz-outline-radius: 10px;
     -webkit-outline-radius: 10px;
-  }
+ }
 
-  .text-footer {
+ .text-footer {
     font-size: 65%;
-  }
+ }
 
   #map {
     height: 85%;
     width: 100%;
   }
 
+#overlay {
+    position: fixed; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
 </style>
 </head>
 
 <body>  
- <!-- Navigation -->
- <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">      
-  <a class="navbar-brand" href="#">
-    <img src="logo.png" width="150" height="43" alt="">
-  </a>    
+  <div id="overlay" onclick="overlayOff()">
+      <div class="container h-100 d-flex justify-content-center">
+    <div class="jumbotron my-auto">
+      <h4 class="display-10">Launch Countdown:</h4>
+      <h1 class="display-3" id = "tim2">00:00:00</h1>
+    </div>
+</div>
+  </div>
+   <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">      
+        <a class="navbar-brand" href="#">
+          <img src="logo.png" width="150" height="43" alt="">
+        </a>    
 
-  <div class="ml-auto text-white">Link Status: <span id="onlineStatus"><span class="text-warning">Connecting...</span></span><br>
-   <span class="text-white">Last Contact:  <span id="timeStamp" ><span class="text-warning">unknown</span></span></div></span>
- </nav>
-
- <div class="row">
-  <div id = "alt" class="col-sm-4 col-centered">0 ft</div>
-  <div id = "hdg" class="col-sm-4 col-centered">5°</div>
-  <div id = "spd" class="col-sm-4 col-centered">0 kt</div>
+         <div class="ml-auto text-white">Link Status: <span id="onlineStatus"><span class="text-warning">Connecting...</span></span><br>
+         <span class="text-white">Last Contact:  <span id="timeStamp" ><span class="text-warning">unknown</span></span></div></span>         
+    </nav>
+  
+<div class="row">
+  <div id = "tim" class="col-sm-3 col-centered font-weight-bold">--:--:--</div>
+  <div id = "alt" class="col-sm-3 col-centered">- ft</div>
+  <div id = "hdg" class="col-sm-3 col-centered">-°</div>
+  <div id = "spd" class="col-sm-3 col-centered">- kt</div>
 </div>
 
 <div id="map"></div> 
@@ -89,48 +111,50 @@
 </div>
 
 
+  
 
 
-<script>
-  var uluru = {lat: -25.363, lng: 131.044};
-  var map;    
-  var marker;   
+  <script>
+    var uluru = {lat: -25.363, lng: 131.044};
+    var map;    
+    var marker;   
 
-  function initMap() {      
-    map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 16,
-      center: uluru        
-    });
+    function initMap() {      
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 9,
+        center: uluru        
+      });
 
-    self.map = map;
+      var image = {
+        url: 'capsule.png',            
+        size: new google.maps.Size(50, 93),
+        scaledSize: new google.maps.Size(50, 93),
+        origin: new google.maps.Point(0, 0),    
+        anchor: new google.maps.Point(0, 60)
+      };
 
-    var image = {
-      url: 'capsule.png',            
-      size: new google.maps.Size(50, 93),
-      scaledSize: new google.maps.Size(50, 93),
-      origin: new google.maps.Point(0, 0),    
-      anchor: new google.maps.Point(0, 60)
-    };
+      marker = new google.maps.Marker({
+        position: uluru,
+        icon: image, 
+        animation: google.maps.Animation.DROP,
+        title: 'HLM-1',       
+        map: map        
+      });
+    }
 
-    marker = new google.maps.Marker({
-      position: uluru,
-      icon: image, 
-      animation: google.maps.Animation.DROP,
-      title: 'HLM-1',       
-      map: map        
-    });
-  }
+    function updatePosition(lat, lon) {           
+      myLatlng = new google.maps.LatLng(lat, lon);                
+      marker.setPosition(myLatlng);      
+      map.panTo(myLatlng);
+      
+      
+    }
 
-  function updatePosition(lat, lon) {           
-    myLatlng = new google.maps.LatLng(lat, lon);                
-    marker.setPosition(myLatlng);      
-    map.panTo(myLatlng);
-  }  
 
-</script>
+  </script>
 
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8gfYbAdrmv31wjFhNZVtmIY6FWhenqLw&callback=initMap">
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8gfYbAdrmv31wjFhNZVtmIY6FWhenqLw&callback=initMap">
 </script>
 
 
@@ -138,37 +162,83 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8gfYbAdrmv31wjFhNZVtmIY6
 
 <script>
   var socket = io('http://movic.io:4200');
-  socket.on('connect', function(){    
-    document.getElementById("onlineStatus").innerHTML = "<span class='text-success'>Online</span>";        
+  socket.on('connect', function(){
+    document.getElementById("onlineStatus").innerHTML = "<span class='text-success'>Online</span>";
+    
     socket.emit('POS', '', (data) => {
      updateAllData(data);
-   });    
+    });
+
+    socket.emit('GETTIME', '', (data) => {
+     updateTimer(data);
+    });
   });
 
   socket.on('POS', function(data){
-   updateAllData(data);   
- });
+     updateAllData(data);
+  });
+
+  socket.on('TSYNC', function(data){            
+     updateTimer(data);
+   });
+
+
 
   socket.on('disconnect', function(){
     document.getElementById("onlineStatus").innerHTML = "Offline";    
-    message("Houston we have a problem!.. Something happened with the internet connection or with the server, we lost coms!")
   });
 
   function updateAllData(data) {
-   updatePosition(parseFloat(data.lat), parseFloat(data.lon));
-   var alt = new Intl.NumberFormat().format(data.alt);
-   var timeStampString = data.timeStamp;  
-   document.getElementById("alt").innerHTML = alt + " ft";   
-   document.getElementById("hdg").innerHTML = data.hdg + "°";   
-   document.getElementById("spd").innerHTML = data.spd + " kt";           
-   document.getElementById("timeStamp").innerHTML = "<span class='text-success'>" + timeStampString +"</span>";
- }
+ updatePosition(parseFloat(data.lat), parseFloat(data.lon));
+      var alt = new Intl.NumberFormat().format(data.alt);
+      var timeStampString = data.timeStamp;
 
-  function message($message) {
-    alert($message);
+      document.getElementById("alt").innerHTML = "Alt: " + alt + " ft";   
+      document.getElementById("hdg").innerHTML = "Hdg: " + data.hdg + "°";   
+      document.getElementById("spd").innerHTML = "Spd: " + data.spd + " kt";           
+      document.getElementById("timeStamp").innerHTML = "<span class='text-success'>" + timeStampString +"</span>";
   }
 
+  function updateTimer(data) {
+    var totalSec = parseInt(data);
+    var sign = "";
+
+    if (totalSec < 0) {
+      sign = "-";
+      overlayOn();
+    } else {
+      overlayOff();
+    }
+
+    totalSec = Math.abs(totalSec);
+    var hours = parseInt( totalSec / 3600 ) % 24;
+    var minutes = parseInt( totalSec / 60 ) % 60;
+    var seconds = totalSec % 60;
+
+    var result = sign + (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);    
+    document.getElementById("tim").innerHTML = result;     
+    document.getElementById("tim2").innerHTML = result;     
+  }
+
+  function formatSeconds(sec) {
+     return [(sec / 3600), ((sec % 3600) / 60), ((sec % 3600) % 60)]
+            .map(v => v < 10 ? "0" + parseInt(v) : parseInt(v))
+            .filter((i, j) => i !== "00" || j > 0)
+            .join(":");
+  }
+
+
+function overlayOn() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function overlayOff() {
+    document.getElementById("overlay").style.display = "none";
+}
+
 </script>
+
+
 
 </body>
 </html>
